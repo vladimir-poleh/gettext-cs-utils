@@ -121,6 +121,14 @@ namespace <#= this.NamespaceName #>
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this Debug mode is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if Debug mode is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public static bool Debug { get; set; }
+
+        /// <summary>
         /// Looks up a localized string; used to mark string for translation as well.
         /// </summary>
         public static string T(string t)
@@ -135,7 +143,13 @@ namespace <#= this.NamespaceName #>
         {
             if (String.IsNullOrEmpty(t)) return t;
             var translated = ResourceManager.GetString(t, info ?? resourceCulture);
-            return String.IsNullOrEmpty(translated) ? t : translated;
+
+            if (string.IsNullOrEmpty(translated))
+            {
+                return Debug ? string.Format("<#= this.DebugPrefix #> {0}", t) : t;
+            }
+
+            return translated;
         }
 
         /// <summary>
@@ -179,6 +193,7 @@ namespace <#= this.NamespaceName #>
     string ClassName = "Strings";
     string ResourceName = "Strings";
     string NamespaceName = "Gettext";
+    string DebugPrefix = "[Missing]";
     
     string ResourceManagerType = "global::Gettext.Cs.GettextResourceManager";
     string ResourceManagerCtor = "new {0}(ResourceName, directory, fileFormat)";
