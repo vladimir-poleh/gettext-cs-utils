@@ -110,7 +110,11 @@ namespace Gettext
         /// </summary>
         public static string T(CultureInfo info, string t)
         {
-            if (String.IsNullOrEmpty(t)) return t;
+            if (String.IsNullOrEmpty(t) || (resourceCulture != null && resourceCulture.Equals(info)))
+            {
+                return t;
+            }
+
             var translated = ResourceManager.GetString(t, info ?? resourceCulture);
 
             if (string.IsNullOrEmpty(translated))
